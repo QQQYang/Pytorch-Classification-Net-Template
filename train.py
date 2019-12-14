@@ -24,15 +24,16 @@ from network import *
 
 def get_opt():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model_name", default = "resnet50")
+    parser.add_argument("--model_name", default = "resnet50", help='network type, must be one of (resnet18,resnet34, resnet50)')
     parser.add_argument("--mode", default = "train")
     parser.add_argument("--root_dir", default = "../dataset")
     parser.add_argument("--use_weight_sample", type=bool, default=False, help='whether use use_weight_sample')
     parser.add_argument("--input_w", type=int, default=224)
     parser.add_argument("--input_h", type=int, default=224)
+    parser.add_argument("--n_class", type=int, default=3, help='number of classes')
 
-    parser.add_argument('--tensorboard_dir', type=str, default='../tensorboard', help='save tensorboard infos')
-    parser.add_argument('--checkpoint_dir', type=str, default='../model', help='save checkpoint infos')
+    parser.add_argument('--tensorboard_dir', type=str, default='../tensorboard', help='directory to save tensorboard infos')
+    parser.add_argument('--checkpoint_dir', type=str, default='../model', help='directory to save checkpoint infos')
     parser.add_argument("--save_model_name", default = "resnet50.pth")
     parser.add_argument("--save_count", type=int, default = 2000)
     parser.add_argument('--checkpoint', type=str, default='')
@@ -51,7 +52,7 @@ def get_opt():
 
 def train_smoke(opt, train_loader, model, board):
     '''
-    训练分类网络用于判断是否有火情发生
+    训练分类网络
     '''
     model.cuda()
     model.train()

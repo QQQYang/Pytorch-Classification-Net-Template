@@ -40,11 +40,26 @@ class SmokeDataset(data.Dataset):
         self.opt = opt
         
         # load data
+        self.labels = []
+        self.im_names = []
+        self.label2class = {}
+        label = 0
         self.data_dir = os.path.join(opt.root_dir, opt.mode)
-        im_names_fire = os.listdir(os.path.join(self.data_dir, 'fire'))
-        im_names_nonfire = os.listdir(os.path.join(self.data_dir, 'nonfire'))
-        self.im_names = im_names_fire + im_names_nonfire
-        self.labels = np.concatenate((np.ones(len(im_names_fire), dtype=np.int), np.zeros(len(im_names_nonfire), dtype=np.int)))
+        img_dirs = os.listdir(self.data_dir)
+        for sub_dir in img_dirs:
+            if os.path.isdir(os.path.join(self.data_dir, sub_dir)):
+                im_names = os.listdir(os.path.join(self.data_dir, sub_dir))
+                for im_name in im_names:
+                    if os.path.splitext(im_name)[-1] in ['.jpg', '.JPG', '.png']:
+                        self.im_names.append(os.path.join(sub_dir, im_name))
+                        self.labels.append(label)
+                        self.label2class[label] = sub_dir
+                    else:
+                        print('warning: %s is not an image' % os.path.join(self.data_dir, sub_dir, im_name))
+            else:
+                print('warning: %s is not a folder' % os.path.join(self.data_dir, sub_dir))
+                continue
+            label += 1
 
         # transform
         self.transform = {
@@ -64,10 +79,8 @@ class SmokeDataset(data.Dataset):
 
     def __getitem__(self, index):
         label = self.labels[index]
-        if label == 1:
-            im_name = os.path.join(self.data_dir, 'fire', self.im_names[index])
-        else:
-            im_name = os.path.join(self.data_dir, 'nonfire', self.im_names[index])
+        im_name = os.path.join(self.data_dir, self.im_names[index])
+        class_name = self.label2class[index][label]
         
         im = cv2.imread(im_name)
         im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
@@ -79,6 +92,7 @@ class SmokeDataset(data.Dataset):
             'im': im,
             'im_name': im_name,
             'label': label,
+            'class_name': class_name,
         }
         return result
 

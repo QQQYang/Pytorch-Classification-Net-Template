@@ -24,12 +24,13 @@ from network import *
 
 def get_opt():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model_name", default = "resnet50")
+    parser.add_argument("--model_name", default = "resnet50", help='network type, must be one of (resnet18,resnet34, resnet50)')
     parser.add_argument("--mode", default = "test")
     parser.add_argument("--root_dir", default = "../dataset")
     parser.add_argument("--use_weight_sample", type=bool, default=False, help='whether use use_weight_sample')
     parser.add_argument("--input_w", type=int, default=224)
     parser.add_argument("--input_h", type=int, default=224)
+    parser.add_argument("--n_class", type=int, default=3, help='number of classes')
 
     parser.add_argument('--tensorboard_dir', type=str, default='../tensorboard', help='save tensorboard infos')
     parser.add_argument('--checkpoint_dir', type=str, default='../model', help='save checkpoint infos')
@@ -51,7 +52,10 @@ def get_opt():
 
 def test_smoke(opt, test_loader, model, board):
     '''
-    训练分类网络用于判断是否有火情发生
+    训练分类网络的性能：
+    acc: 分类准确率,
+    FN: False negative,
+    FP: False positive
     '''
     model.cuda()
     model.eval()

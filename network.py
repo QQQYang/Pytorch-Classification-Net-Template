@@ -19,7 +19,7 @@ class FireSmokeClf(nn.Module):
         self.opt = opt
         self.model = BaseModel[opt.model_name]
         self.n_feat = self.model.fc.in_features
-        self.model.fc = nn.Linear(self.n_feat, 2).cuda()
+        self.model.fc = nn.Linear(self.n_feat, opt.n_class).cuda()
         self.model.cuda()
 
     def forward(self, x):

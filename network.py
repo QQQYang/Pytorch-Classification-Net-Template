@@ -11,6 +11,7 @@ BaseModel = {
     'resnet18': models.resnet18(pretrained=True),
     'resnet34': models.resnet34(pretrained=True),
     'resnet50': models.resnet50(pretrained=True),
+    'vgg16': models.vgg16(pretrained=True),
 }
 
 class FireSmokeClf(nn.Module):

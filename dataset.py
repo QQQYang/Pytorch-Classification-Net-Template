@@ -80,7 +80,7 @@ class SmokeDataset(data.Dataset):
     def __getitem__(self, index):
         label = self.labels[index]
         im_name = os.path.join(self.data_dir, self.im_names[index])
-        class_name = self.label2class[index][label]
+        class_name = self.label2class[label]
         
         im = cv2.imread(im_name)
         im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
